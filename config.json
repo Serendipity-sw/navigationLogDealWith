@@ -1,0 +1,8 @@
+{
+"sendMails":"",
+  "account":"",
+  "password":"",
+  "processFilePath":"",
+  "day":"-1",
+  "taskId":""
+}
