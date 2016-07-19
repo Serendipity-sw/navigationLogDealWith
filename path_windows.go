@@ -4,7 +4,7 @@ import "os"
 
 // +build windows
 const recordPath = "./logs/"
-const pidFile = "./sceneportal.pid"
+const pidFile = "./navigationLogDealWith.pid"
 
 func isProcessExist(pid int) bool {
 	// 进程是否存在
