@@ -21,6 +21,7 @@ var (
 	portal210                      int            //某个探针设备编号共发送请求书
 	portal6                        int            //某个探针设备编号共发送请求书
 	portal7                        int            //某个探针设备编号共发送请求书
+	portalArray                    map[string]int //某个探针设备编号共发送请求数
 	javaRequestPhoneNumber         map[string]int //java共返回需要导航的用户数
 	javaRequestPhoneNumberByTaskId map[string]int //java共返回某个特定任务的导航用户数
 	feedBackPhoneNumber            map[string]int //所有任务的导航用户数
@@ -37,6 +38,7 @@ func logProcessFunc() {
 	timeDatef = timeDates.Format("2006/01/02")
 	timeDate = timeDates.Format("20060102")
 	sendMailContent = sendMailContent[:0]
+	portalArray = map[string]int{}
 	getMyReceiveNumber()
 	javaRequestCountNumber = 0
 	javaRequestCountNumberByTaskId = 0
@@ -97,14 +99,9 @@ func infoFileProcess() {
 	sendMailContent = append(sendMailContent, fmt.Sprintf("曝光总量用户数: %d \r\n", len(feedBackPhoneNumber)))
 	sendMailContent = append(sendMailContent, fmt.Sprintf("曝光总量任务%s: %d \r\n", taskId, feedBackNumberByTaskId))
 	sendMailContent = append(sendMailContent, fmt.Sprintf("曝光总量任务%s用户数: %d \r\n", taskId, len(feedBackPhoneNumberByTaskId)))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号11: %d \r\n", portal11))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号12: %d \r\n", portal12))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号13: %d \r\n", portal13))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号14: %d \r\n", portal14))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号209: %d \r\n", portal209))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号210: %d \r\n", portal210))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号6: %d \r\n", portal6))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号7: %d", portal7))
+	for key, value := range portalArray {
+		sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号%s: %d \r\n", key, value))
+	}
 }
 
 /**
@@ -115,22 +112,13 @@ func infoFileProcess() {
 func portalCount(content string) bool {
 	bo := strings.Index(content, "parseParams:") >= 0 && strings.Index(content, "pid=") >= 0
 	if bo {
-		if strings.Index(content, "pid=11") >= 0 {
-			portal11++
-		} else if strings.Index(content, "pid=12") >= 0 {
-			portal12++
-		} else if strings.Index(content, "pid=13") >= 0 {
-			portal13++
-		} else if strings.Index(content, "pid=14") >= 0 {
-			portal14++
-		} else if strings.Index(content, "pid=209") >= 0 {
-			portal209++
-		} else if strings.Index(content, "pid=210") >= 0 {
-			portal210++
-		} else if strings.Index(content, "pid=6") >= 0 {
-			portal6++
-		} else if strings.Index(content, "pid=7") >= 0 {
-			portal7++
+		pidStr := strings.Split(content, "&")[4]
+		pidNumber := strings.Split(pidStr, "=")[1]
+		_, ok := portalArray[pidNumber]
+		if ok {
+			portalArray[pidNumber]++
+		} else {
+			portalArray[pidNumber] = 0
 		}
 	}
 	return bo
