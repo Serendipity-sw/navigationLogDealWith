@@ -13,14 +13,6 @@ var (
 	javaRequestCountNumberByTaskId int            //java共返回某个特定任务的导航树
 	feedBackNumber                 int            //所有任务共曝光次数
 	feedBackNumberByTaskId         int            //某个特定任务的曝光次数
-	portal11                       int            //某个探针设备编号共发送请求书
-	portal12                       int            //某个探针设备编号共发送请求书
-	portal13                       int            //某个探针设备编号共发送请求书
-	portal14                       int            //某个探针设备编号共发送请求书
-	portal209                      int            //某个探针设备编号共发送请求书
-	portal210                      int            //某个探针设备编号共发送请求书
-	portal6                        int            //某个探针设备编号共发送请求书
-	portal7                        int            //某个探针设备编号共发送请求书
 	portalArray                    map[string]int //某个探针设备编号共发送请求数
 	javaRequestPhoneNumber         map[string]int //java共返回需要导航的用户数
 	javaRequestPhoneNumberByTaskId map[string]int //java共返回某个特定任务的导航用户数
@@ -44,14 +36,6 @@ func logProcessFunc() {
 	javaRequestCountNumberByTaskId = 0
 	feedBackNumber = 0
 	feedBackNumberByTaskId = 0
-	portal11 = 0
-	portal12 = 0
-	portal13 = 0
-	portal14 = 0
-	portal209 = 0
-	portal210 = 0
-	portal6 = 0
-	portal7 = 0
 	javaRequestPhoneNumber = make(map[string]int)
 	javaRequestPhoneNumberByTaskId = make(map[string]int)
 	feedBackPhoneNumber = make(map[string]int)
@@ -190,7 +174,8 @@ func getMyReceiveNumber() {
 	var where []func(string) bool
 	where = append(where, nohupJudgment)
 	matchNumber, _ := readFile(nohupFilePath, where, nil)
-	sendMailContent = append(sendMailContent, fmt.Sprintf("导航共接收探针%d次请求", matchNumber))
+	sendMailContent = append(sendMailContent, fmt.Sprintf("省份: %s \r\n", province))
+	sendMailContent = append(sendMailContent, fmt.Sprintf("导航共接收探针%d次请求 \r\n", matchNumber))
 }
 
 /**

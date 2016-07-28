@@ -24,6 +24,7 @@ var (
 	timeDate        string   //程序运行需要处理的日期 时间格式为20060102
 	sendMailContent []string
 	taskId          string //需要检查的任务ID
+	province        string //省份
 )
 
 /**
@@ -42,6 +43,7 @@ func serverRun(cfn string, debug bool) {
 	password = config.GetString("password")
 	processFilePath = config.GetString("processFilePath")
 	taskId = config.GetString("taskId")
+	province = config.GetString("province")
 	day = config.GetInt64Default("day", -1)
 	// 初始化
 	deferinit.InitAll()
