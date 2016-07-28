@@ -69,20 +69,24 @@ info日志分析主方法
 func infoFileProcess() {
 	var where []func(string) bool
 	where = append(where, portalCount)
-	where = append(where, feedBackNumberByTaskIdFunc)
+	if strings.TrimSpace(taskId) != "" {
+		where = append(where, feedBackNumberByTaskIdFunc)
+		where = append(where, javaRequestSuccessByTaskIdFunc)
+	}
 	where = append(where, feedBackNumberProcessFunc)
 	where = append(where, javaRequestSuccessFunc)
-	where = append(where, javaRequestSuccessByTaskIdFunc)
 	infoFilePath := fmt.Sprintf("%s/logs/INFO-%s.log", processFilePath, timeDate)
 	readFile(infoFilePath, where, nil)
 	sendMailContent = append(sendMailContent, fmt.Sprintf("java共返回导航数: %d \r\n", javaRequestCountNumber))
 	sendMailContent = append(sendMailContent, fmt.Sprintf("java共返回导航数用户数: %d \r\n", len(javaRequestPhoneNumber)))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("java共返回任务%s: %d \r\n", taskId, javaRequestCountNumberByTaskId))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("java共返回任务%s用户数: %d \r\n", taskId, len(javaRequestPhoneNumberByTaskId)))
+	if strings.TrimSpace(taskId) != "" {
+		sendMailContent = append(sendMailContent, fmt.Sprintf("java共返回任务%s: %d \r\n", taskId, javaRequestCountNumberByTaskId))
+		sendMailContent = append(sendMailContent, fmt.Sprintf("java共返回任务%s用户数: %d \r\n", taskId, len(javaRequestPhoneNumberByTaskId)))
+		sendMailContent = append(sendMailContent, fmt.Sprintf("曝光总量任务%s: %d \r\n", taskId, feedBackNumberByTaskId))
+		sendMailContent = append(sendMailContent, fmt.Sprintf("曝光总量任务%s用户数: %d \r\n", taskId, len(feedBackPhoneNumberByTaskId)))
+	}
 	sendMailContent = append(sendMailContent, fmt.Sprintf("曝光总量: %d \r\n", feedBackNumber))
 	sendMailContent = append(sendMailContent, fmt.Sprintf("曝光总量用户数: %d \r\n", len(feedBackPhoneNumber)))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("曝光总量任务%s: %d \r\n", taskId, feedBackNumberByTaskId))
-	sendMailContent = append(sendMailContent, fmt.Sprintf("曝光总量任务%s用户数: %d \r\n", taskId, len(feedBackPhoneNumberByTaskId)))
 	for key, value := range portalArray {
 		sendMailContent = append(sendMailContent, fmt.Sprintf("探针编号%s: %d \r\n", key, value))
 	}
